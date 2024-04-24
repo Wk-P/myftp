@@ -263,6 +263,7 @@ class FileManager():
                         if not data:
                             break
                         data = self.parse_string(data)
+                        print(data)
                         if isinstance(data, dict):
                             # 文件信息
                             name = data['Filename']
@@ -272,7 +273,7 @@ class FileManager():
                             if data[-3:] == 'EOF':
                                 data = data[:-3]
                                 break
-                    print(data)
+                    
                     if data != "":
                         recv_file.write(data)
                     
