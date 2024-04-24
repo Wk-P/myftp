@@ -183,7 +183,8 @@ class FileManager():
                 break
             self.package_queue.put(ChunkPackage(content=chunk, byte_size=chunk_size))
             chunk_number += 1
-        return chunk_number
+        self.package_queue.put(ChunkPackage(content=b'EOF', byte_size=8))
+        return chunk_number + 1
 
 
     # test function
@@ -258,14 +259,16 @@ class FileManager():
                             suffix = data['Suffix']
                             recv_file:File = File(filepath=f"{self.receive_path}/{name}.{suffix}", mode='wb')
                         else:
+                            if data == 'EOF':
+                                break
                             recv_file.write(data)
                     if "recv_file" in locals():
-                        messagebox.showinfo("Info", "文件接收完毕")
+                        messagebox.showinfo("Info", f"文件{recv_file.name}接收完毕")
                         recv_file.close()
                         return True
                 except OSError as e:
                     if not isinstance(e, socket.error):
-                        messagebox.showerror("Error", f"文件接收失败\nError:{e}")
+                        messagebox.showerror("Error", f"文件{recv_file.name}接收失败\nError:{e}")
                         if "recv_file" in locals():
                             recv_file.close()
                     else:
