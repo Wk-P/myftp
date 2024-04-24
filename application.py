@@ -248,6 +248,7 @@ class FileManager():
                 try:
                     sock, _ = self.receive_socket.accept()
                     recv_file = None  # 确保先定义
+                    print(data)
                     while True:
                         data = sock.recv(1024)
                         if not data:
