@@ -263,18 +263,18 @@ class FileManager():
                         if not data:
                             break
                         data = self.parse_string(data)
-                        print(data)
                         if isinstance(data, dict):
                             # 文件信息
                             name = data['Filename']
                             suffix = data['Suffix']
                             recv_file:File = File(filepath=f"{self.receive_path}/{name}.{suffix}", mode='wb')
                         else:
-                            if data[-3:] == 'EOF':
+                            if data[-3:] == b'EOF':
                                 data = data[:-3]
                                 break
+                            recv_file.write(data)
                     
-                    if data != "":
+                    if data != b"":
                         recv_file.write(data)
                     
                     if "recv_file" in locals():
