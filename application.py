@@ -9,6 +9,12 @@ import json
 import re
 import subprocess
 import threading
+from pathlib import Path
+
+def get_parent_path():
+    current_file = Path(__file__).resolve()
+    return current_file.parent
+
 
 def get_default_gateway_interface():
     try:
@@ -248,7 +254,6 @@ class FileManager():
                 try:
                     sock, _ = self.receive_socket.accept()
                     recv_file = None  # 确保先定义
-                    print(data)
                     while True:
                         data = sock.recv(1024)
                         if not data:
@@ -401,7 +406,8 @@ if __name__ == "__main__":
     receive_socket.listen(5)
     
     send_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    fm = FileManager(send_socket=send_socket, receive_socket=receive_socket, recv_path=r"C:\pythonLocalFile\myftp\receive")
+    receive_path = get_parent_path() / r"receive"
+    fm = FileManager(send_socket=send_socket, receive_socket=receive_socket, recv_path=receive_path)
     init(manager=fm)
     
     send_socket.close()
