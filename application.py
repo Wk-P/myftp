@@ -214,6 +214,10 @@ class FileManager():
             return False
 
 
+    def send(self):
+        self.send_socket.sendall()
+
+
     def send_file(self, file:File):
         try:
             packages_number = self.split_binary_file(file)
@@ -265,9 +269,13 @@ class FileManager():
                             suffix = data['Suffix']
                             recv_file:File = File(filepath=f"{self.receive_path}/{name}.{suffix}", mode='wb')
                         else:
-                            if data == 'EOF':
+                            if data[-3:] == 'EOF':
+                                data = data[:-3]
                                 break
-                            recv_file.write(data)
+                    print(data)
+                    if data != "":
+                        recv_file.write(data)
+                    
                     if "recv_file" in locals():
                         messagebox.showinfo("Info", f"文件{recv_file.name}接收完毕")
                         recv_file.close()
